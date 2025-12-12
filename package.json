@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-Minder",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"description": "A plugin for quickly recording inspirations, ideas, and small notes, with support for tag organization and searching",
 	"main": "main.js",
 	"scripts": {

@@ -400,6 +400,14 @@ If your plugin does not need CSS, delete this file.
 	font-size: 0.95em;
 }
 
+.minder-memo-content a.external-link {
+	word-break: break-all;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	overflow: hidden;
+}
+
 .minder-memo-content pre {
 	background: #eee;
 	position: relative;
