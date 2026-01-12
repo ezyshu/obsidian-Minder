@@ -166,12 +166,18 @@ export class MemoItemComponent {
 		try {
 			// 使用Obsidian的Markdown渲染器渲染内容，传递组件参数以避免内存泄漏
 			if (this.component) {
+				// 获取源文件路径，用于正确解析内部链接
+				const sourcePath = this.memo.linkedFile?.path || "";
+
 				MarkdownRenderer.renderMarkdown(
 					this.memo.content,
 					containerEl,
-					"",
+					sourcePath,
 					this.component
 				);
+
+				// 为内部链接添加点击事件处理
+				this.setupInternalLinkHandler(containerEl);
 			} else {
 				// 如果没有有效的组件引用，使用简单的文本渲染
 				const contentP = containerEl.createEl("p");
@@ -182,6 +188,27 @@ export class MemoItemComponent {
 			const errorP = containerEl.createEl("p");
 			errorP.textContent = this.memo.content;
 		}
+	}
+
+	/**
+	 * 为内部链接设置点击事件处理
+	 * @param containerEl 容器元素
+	 */
+	private setupInternalLinkHandler(containerEl: HTMLElement): void {
+		const internalLinks = containerEl.querySelectorAll("a.internal-link");
+
+		internalLinks.forEach((link) => {
+			link.addEventListener("click", (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+
+				const linkEl = event.currentTarget as HTMLAnchorElement;
+				const linkText = linkEl.getAttribute("data-href") || linkEl.getAttribute("href") || linkEl.textContent || "";
+
+				// 使用 Obsidian 的 API 打开链接
+				this.app.workspace.openLinkText(linkText, this.memo.linkedFile?.path || "", false);
+			});
+		});
 	}
 	
 	/**
