@@ -402,7 +402,7 @@ If your plugin does not need CSS, delete this file.
 
 .minder-memo-content a.external-link {
 	word-break: break-all;
-	display: -webkit-box;
+	display: -webkit-inline-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 3;
 	overflow: hidden;
