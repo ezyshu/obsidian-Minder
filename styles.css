@@ -127,6 +127,25 @@ If your plugin does not need CSS, delete this file.
 	color: var(--text-on-accent);
 }
 
+.minder-settings-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	background: var(--background-secondary);
+	cursor: pointer;
+	transition: all 0.2s ease;
+	color: var(--text-muted);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.minder-settings-button:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+
 /* 编辑器样式 */
 .minder-editor-area {
 	padding: 16px;

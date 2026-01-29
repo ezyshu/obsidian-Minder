@@ -64,7 +64,7 @@ export class MemoView extends ItemView {
 		this.editor = new MemoEditor({
 			app: this.app,
 			memoService: this.memoService,
-			placeholder: "输入你的想法...",
+			placeholder: "开始你的想法...",
 			onSubmit: async (memo) => {
 				// 如果是编辑状态，需要清除编辑标记
 				if (this.currentEditingMemoId) {
@@ -131,6 +131,13 @@ export class MemoView extends ItemView {
 		this.searchButton.setAttribute("aria-label", "搜索笔记");
 		this.searchButton.addEventListener("click", () => {
 			this.toggleSearchVisibility();
+		});
+
+		const settingsButton = buttonsContainer.createDiv({ cls: "minder-settings-button" });
+		setIcon(settingsButton, "settings");
+		settingsButton.setAttribute("aria-label", "打开 Minder 设置");
+		settingsButton.addEventListener("click", () => {
+			this.openSettings();
 		});
 		
 		this.tagsBar = new TagsBar({
@@ -205,6 +212,14 @@ export class MemoView extends ItemView {
 			this.hideSearch();
 		} else {
 			this.showSearch();
+		}
+	}
+
+	private openSettings(): void {
+		const app: any = this.app;
+		if (app && app.setting) {
+			app.setting.open();
+			app.setting.openTabById("obsidian-Minder");
 		}
 	}
 

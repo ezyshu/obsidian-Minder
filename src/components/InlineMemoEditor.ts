@@ -47,7 +47,7 @@ export class InlineMemoEditor {
         // 文本输入区
         this.textArea = new TextAreaComponent(editorContainer);
         this.textArea
-            .setPlaceholder('输入你的想法...')
+            .setPlaceholder('开始你的想法...')
             .setValue(this.memo.content)
             .onChange(() => {
                 this.previewTags();
