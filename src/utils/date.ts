@@ -46,9 +46,10 @@ export function getWeekStartTimestamp(): number {
 /**
  * 获取相对时间描述
  * @param timestamp 时间戳（毫秒）
+ * @param fallbackFormat 超过一周时的日期格式（可选，默认 YYYY-MM-DD）
  * @returns 相对时间描述字符串
  */
-export function getRelativeTimeString(timestamp: number): string {
+export function getRelativeTimeString(timestamp: number, fallbackFormat: string = "YYYY-MM-DD"): string {
     const now = Date.now();
     const diff = now - timestamp;
 
@@ -75,6 +76,6 @@ export function getRelativeTimeString(timestamp: number): string {
         return `${days}天前`;
     }
     
-    // 大于1周，返回具体日期
-    return formatDate(timestamp, "YYYY-MM-DD");
+    // 大于1周，返回具体日期（可配置格式）
+    return formatDate(timestamp, fallbackFormat);
 } 

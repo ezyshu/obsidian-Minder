@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-Minder",
 	"name": "Minder",
-	"version": "1.0.9",
+	"version": "1.0.10",
 	"minAppVersion": "0.15.0",
 	"description": "快速记录灵感、想法和小笔记的插件，支持标签整理和搜索",
 	"author": "Obsidian",

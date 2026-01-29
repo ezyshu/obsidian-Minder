@@ -84,7 +84,9 @@ export class MemoItemComponent {
 		// 时间显示
 		if (this.showTimestamp) {
 			const timeEl = headerEl.createDiv({ cls: "minder-memo-time" });
-			timeEl.setText(getRelativeTimeString(this.memo.createdAt));
+			timeEl.setText(
+				getRelativeTimeString(this.memo.createdAt, this.dateFormat)
+			);
 			timeEl.setAttribute(
 				"title",
 				formatDate(this.memo.createdAt, this.dateFormat)

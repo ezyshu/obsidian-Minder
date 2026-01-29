@@ -47,7 +47,7 @@ export class MinderSettingTab extends PluginSettingTab {
         
         new Setting(containerEl)
             .setName('显示数量')
-            .setDesc('每个视图显示的笔记数量上限')
+            .setDesc('每页显示笔记数量（做分页用）')
             .addText(text => text
                 .setPlaceholder('50')
                 .setValue(String(this.plugin.settings.displayCount))

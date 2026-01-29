@@ -130,7 +130,7 @@ If your plugin does not need CSS, delete this file.
 /* 编辑器样式 */
 .minder-editor-area {
 	padding: 16px;
-	background: var(--background-secondary);
+	background: var(--color-base-10);
 	border-radius: 10px;
 	width: 100%;
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -309,7 +309,7 @@ If your plugin does not need CSS, delete this file.
 	background: var(--background-primary);
 	border-radius: 10px;
 	width: 100%;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 	border: 1px solid var(--background-modifier-border);
 	transition: all 0.2s ease;
 	position: relative;
@@ -317,27 +317,6 @@ If your plugin does not need CSS, delete this file.
 
 .minder-memo-item:hover {
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.minder-memo-item::before {
-	content: '';
-	position: absolute;
-	left: 0;
-	top: 0;
-	bottom: 0;
-	width: 4px;
-	background: var(--interactive-accent);
-	border-radius: 4px 0 0 4px;
-}
-
-/* 编辑中的笔记样式 */
-.minder-memo-item.minder-memo-editing {
-	/* 移除透明度，避免位置变化感 */
-	/* opacity: 0.7; */
-}
-
-.minder-memo-item.minder-memo-editing::before {
-	background: var(--text-warning);
 }
 
 .minder-memo-editing-badge {
@@ -472,6 +451,43 @@ If your plugin does not need CSS, delete this file.
 	content: "✏️";
 	font-size: 24px;
 	margin-bottom: 10px;
+}
+
+.minder-pagination {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 12px;
+	font-size: 12px;
+	color: var(--text-muted);
+}
+
+.minder-pagination-info {
+	flex: 1;
+}
+
+.minder-pagination-controls {
+	display: flex;
+	gap: 8px;
+}
+
+.minder-pagination-button {
+	padding: 4px 10px;
+	border-radius: 6px;
+	background: var(--background-secondary);
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.minder-pagination-button:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+
+.minder-pagination-button.disabled {
+	opacity: 0.5;
+	cursor: default;
+	background: var(--background-secondary);
 }
 
 /* 内联编辑器样式 */

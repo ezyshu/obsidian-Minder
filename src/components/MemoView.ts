@@ -26,6 +26,8 @@ export class MemoView extends ItemView {
 	private searchEl: HTMLElement;
 	private searchButton: HTMLElement;
 	private isSearchVisible: boolean = false;
+	private currentPage: number = 1;
+	private paginationEl: HTMLElement;
 
 	constructor(leaf: WorkspaceLeaf, settings: MinderSettings) {
 		super(leaf);
@@ -69,6 +71,7 @@ export class MemoView extends ItemView {
 					// 重置编辑状态
 					this.clearEditingState();
 				}
+				this.currentPage = 1;
 				await this.refreshMemos();
 				await this.tagsBar?.refresh();
 			},
@@ -93,6 +96,7 @@ export class MemoView extends ItemView {
 		});
 		searchInput.addEventListener("input", (e) => {
 			this.searchText = (e.target as HTMLInputElement).value;
+			this.currentPage = 1;
 			this.refreshMemos();
 		});
 		
@@ -136,6 +140,7 @@ export class MemoView extends ItemView {
 				this.currentTag = tagName;
 				// 如果点击标签，设置当前视图类型为标签视图
 				this.currentViewType = tagName ? ViewType.TAG : ViewType.ALL;
+				this.currentPage = 1;
 				this.refreshMemos();
 			},
 		});
@@ -149,6 +154,10 @@ export class MemoView extends ItemView {
 		// 笔记容器
 		this.memosContainer = this.memoContentEl.createDiv({
 			cls: "minder-memos-container",
+		});
+
+		this.paginationEl = this.memoContentEl.createDiv({
+			cls: "minder-pagination",
 		});
 
 		// 初始化加载笔记
@@ -183,6 +192,7 @@ export class MemoView extends ItemView {
 		if (searchInput) {
 			searchInput.value = "";
 			this.searchText = "";
+			this.currentPage = 1;
 			this.refreshMemos();
 		}
 	}
@@ -220,7 +230,7 @@ export class MemoView extends ItemView {
 						});
 					} else {
 						this.memos = await this.memoService.getAllMemos(
-							this.settings.displayCount,
+							undefined,
 							this.settings.defaultSort
 						);
 					}
@@ -234,15 +244,32 @@ export class MemoView extends ItemView {
 						});
 					} else {
 						this.memos = await this.memoService.getAllMemos(
-							this.settings.displayCount,
+							undefined,
 							this.settings.defaultSort
 						);
 					}
 					break;
 			}
 
+			const pageSize = this.settings.displayCount;
+			let pagedMemos = this.memos;
+			let totalPages = 1;
+
+			if (pageSize && pageSize > 0 && this.memos.length > pageSize) {
+				totalPages = Math.max(1, Math.ceil(this.memos.length / pageSize));
+				if (this.currentPage > totalPages) {
+					this.currentPage = totalPages;
+				}
+				const startIndex = (this.currentPage - 1) * pageSize;
+				const endIndex = startIndex + pageSize;
+				pagedMemos = this.memos.slice(startIndex, endIndex);
+			} else {
+				this.currentPage = 1;
+				totalPages = 1;
+			}
+
 			// 渲染笔记
-			for (const memo of this.memos) {
+			for (const memo of pagedMemos) {
 				const memoItemComponent = new MemoItemComponent({
 					app: this.app,
 					memo,
@@ -280,6 +307,8 @@ export class MemoView extends ItemView {
 				}
 			}
 
+			this.renderPagination(this.memos.length, totalPages);
+
 			// 显示无结果提示
 			if (this.memos.length === 0) {
 				const emptyEl = this.memosContainer.createDiv({
@@ -290,6 +319,64 @@ export class MemoView extends ItemView {
 		} catch (error) {
 			console.error("加载笔记失败", error);
 			new Notice("加载笔记失败");
+		}
+	}
+
+	private renderPagination(totalMemos: number, totalPages: number): void {
+		if (!this.paginationEl) {
+			return;
+		}
+
+		this.paginationEl.empty();
+
+		const pageSize = this.settings.displayCount;
+
+		if (!pageSize || pageSize <= 0 || totalMemos <= pageSize) {
+			this.paginationEl.style.display = "none";
+			return;
+		}
+
+		this.paginationEl.style.display = "flex";
+
+		const infoEl = this.paginationEl.createDiv({
+			cls: "minder-pagination-info",
+		});
+		infoEl.setText(
+			`第 ${this.currentPage} / ${totalPages} 页 · 共 ${totalMemos} 条笔记`
+		);
+
+		const controlsEl = this.paginationEl.createDiv({
+			cls: "minder-pagination-controls",
+		});
+
+		const prevButton = controlsEl.createDiv({
+			cls: "minder-pagination-button",
+		});
+		prevButton.setText("上一页");
+		if (this.currentPage <= 1) {
+			prevButton.addClass("disabled");
+		} else {
+			prevButton.addEventListener("click", () => {
+				if (this.currentPage > 1) {
+					this.currentPage -= 1;
+					this.refreshMemos();
+				}
+			});
+		}
+
+		const nextButton = controlsEl.createDiv({
+			cls: "minder-pagination-button",
+		});
+		nextButton.setText("下一页");
+		if (this.currentPage >= totalPages) {
+			nextButton.addClass("disabled");
+		} else {
+			nextButton.addEventListener("click", () => {
+				if (this.currentPage < totalPages) {
+					this.currentPage += 1;
+					this.refreshMemos();
+				}
+			});
 		}
 	}
 
